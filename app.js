@@ -1,6 +1,6 @@
 const express = require('express');
 const {mongoose} = require('mongoose');
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, BASE_URL } = process.env;
 const app = express();
 const bodyParser = require('body-parser');
 
