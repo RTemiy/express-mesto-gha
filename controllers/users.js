@@ -7,7 +7,7 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findById(req.params.id)
+  User.findById(req.user._id)
     .then(user => {
       !user && res.status(404).send({message : 'Пользователь не найден'})
       user && res.send({ data: user })
@@ -33,7 +33,7 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUserInfo = (req, res) => {
   const { name,about } = req.body;
   User.findByIdAndUpdate(
-    req.params._id,
+    req.user._id,
     {name, about},
     {new: true, runValidators: true }
   )
@@ -53,7 +53,7 @@ module.exports.updateUserInfo = (req, res) => {
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
-    req.params._id,
+    req.user._id,
     { avatar },
     { new: true, runValidators: true }
   )
