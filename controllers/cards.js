@@ -27,7 +27,13 @@ module.exports.deleteCard = (req, res) => {
       card && res.send({data: card});
       !card && res.status(404).send({message : 'Карточка не найдена'})
     })
-    .catch(err => res.status(500).send({message: err.message}));
+    .catch(err => {
+      if(err.name === 'CastError'){
+        res.status(400).send({message: 'Некорректные данные'})
+      } else {
+        res.status(500).send({message: err.message})
+      }
+    });
 }
 
 module.exports.likeCard = (req, res) => {
@@ -40,7 +46,13 @@ module.exports.likeCard = (req, res) => {
       card && res.send({data: card});
       !card && res.status(404).send({message : 'Карточка не найдена'})
     })
-    .catch(err => res.status(500).send({message: err.message}));
+    .catch(err => {
+      if(err.name === 'CastError'){
+        res.status(400).send({message: 'Некорректные данные'})
+      } else {
+        res.status(500).send({message: err.message})
+      }
+    });
 }
 
 module.exports.dislikeCard = (req, res) => {
@@ -53,5 +65,11 @@ module.exports.dislikeCard = (req, res) => {
       card && res.send({data: card});
       !card && res.status(404).send({message : 'Карточка не найдена'})
     })
-    .catch(err => res.status(500).send({message: err.message}));
+    .catch(err => {
+      if(err.name === 'CastError'){
+        res.status(400).send({message: 'Некорректные данные'})
+      } else {
+        res.status(500).send({message: err.message})
+      }
+    });
 }
