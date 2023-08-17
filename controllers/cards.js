@@ -10,14 +10,23 @@ module.exports.createCard = (req, res) => {
   const { name,link } = req.body;
   Card.create({ name,link })
     .then(card => {
-      return res.status(201).send({ data: card });
+      return res.send({ data: card });
     })
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if(err.name === 'ValidationError'){
+        res.status(400).send({message: 'Некорректные данные'})
+      } else {
+        res.status(500).send({message: err.message})
+      }
+    });
 };
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndDelete(req.params.id)
-    .then(card => res.send({data: card}))
+    .then((card) => {
+      card && res.send({data: card});
+      !card && res.status(404).send({message : 'Карточка не найдена'})
+    })
     .catch(err => res.status(500).send({message: err.message}));
 }
 
@@ -27,7 +36,10 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then(card => res.send({data: card}))
+    .then((card) => {
+      card && res.send({data: card});
+      !card && res.status(404).send({message : 'Карточка не найдена'})
+    })
     .catch(err => res.status(500).send({message: err.message}));
 }
 
@@ -37,6 +49,9 @@ module.exports.dislikeCard = (req, res) => {
   { $pull: { likes: req.user._id } },
   { new: true },
 )
-    .then(card => res.send({data: card}))
+    .then((card) => {
+      card && res.send({data: card});
+      !card && res.status(404).send({message : 'Карточка не найдена'})
+    })
     .catch(err => res.status(500).send({message: err.message}));
 }

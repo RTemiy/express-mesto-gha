@@ -8,7 +8,10 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.id)
-    .then(user => res.send({ data: user }))
+    .then(user => {
+      !user && res.status(404).send({message : 'Пользователь не найден'})
+      user && res.send({ data: user })
+    })
     .catch(err => res.status(500).send({ message: err.message }));
 };
 
@@ -16,9 +19,15 @@ module.exports.createUser = (req, res) => {
   const { name,about,avatar } = req.body;
   User.create({ name,about,avatar })
     .then(user => {
-      return res.status(201).send({ data: user });
+      return res.send({ data: user });
     })
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch(err => {
+      if(err.name === 'ValidationError'){
+        res.status(400).send({message: 'Некорректные данные'})
+      } else {
+        res.status(500).send({message: err.message})
+      }
+    });
 };
 
 module.exports.updateUserInfo = (req, res) => {
@@ -29,9 +38,16 @@ module.exports.updateUserInfo = (req, res) => {
     {new: true, runValidators: true }
   )
     .then(user => {
-      return res.status(201).send({ data: user });
+      !user && res.status(404).send({message : 'Пользователь не найден'})
+      user && res.send({ data: user })
     })
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch(err => {
+      if(err.name === 'ValidationError'){
+        res.status(400).send({message: 'Некорректные данные'})
+      } else {
+        res.status(500).send({message: err.message})
+      }
+    });
 };
 
 module.exports.updateUserAvatar = (req, res) => {
@@ -42,7 +58,14 @@ module.exports.updateUserAvatar = (req, res) => {
     { new: true, runValidators: true }
   )
     .then(user => {
-      return res.status(201).send({ data: user });
+      !user && res.status(404).send({message : 'Пользователь не найден'})
+      user && res.send({ data: user })
     })
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch(err => {
+      if(err.name === 'ValidationError'){
+        res.status(400).send({message: 'Некорректные данные'})
+      } else {
+        res.status(500).send({message: err.message})
+      }
+    });
 };
