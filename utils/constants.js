@@ -1,3 +1,3 @@
 const SECRET_KEY = 'smth';
 
-export default SECRET_KEY;
+module.exports = SECRET_KEY;
