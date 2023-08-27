@@ -35,18 +35,18 @@ module.exports.createUser = (req, res) => {
     .then((hash) => {
       User.create({
         name, about, avatar, password: hash, email,
-      });
+      })
+        .then((user) => res.send({
+          name, about, avatar, email, _id: user._id,
+        }));
     })
-    .then((user) => res.send({
-      name, about, avatar, email, _id: user._id,
-    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Некорректные данные' });
       } else if (err.code === 11000) {
         res.status(409).send({ message: 'Пользователь уже существует' });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
