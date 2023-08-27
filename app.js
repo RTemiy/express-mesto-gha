@@ -7,8 +7,7 @@ const { errors } = require('celebrate');
 const { PORT = 3000 } = process.env;
 const app = express();
 const bodyParser = require('body-parser');
-const login = require('./routes/signin');
-const register = require('./routes/signup');
+const authRoute = require('./routes/auth');
 const auth = require('./middlewares/auth');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
@@ -22,8 +21,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/signin', login);
-app.post('/signup', register);
+app.use('/', authRoute);
 
 app.use(auth);
 
