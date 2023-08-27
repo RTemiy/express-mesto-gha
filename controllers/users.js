@@ -4,8 +4,8 @@ const User = require('../models/user');
 const Error409 = require('../errors/Error409');
 const Error400 = require('../errors/Error400');
 const Error500 = require('../errors/Error500');
-const Error404 = require("../errors/Error404");
-const Error401 = require("../errors/Error401");
+const Error404 = require('../errors/Error404');
+const Error401 = require('../errors/Error401');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -13,20 +13,20 @@ module.exports.getUsers = (req, res) => {
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        next(new Error404('Пользователь не найден'));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        next(new Error400('Некорректные данные'));
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        next(new Error500('На сервере произошла ошибка'));
       }
     });
 };
