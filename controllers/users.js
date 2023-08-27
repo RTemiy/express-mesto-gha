@@ -46,7 +46,7 @@ module.exports.createUser = (req, res) => {
       } else if (err.code === 11000) {
         res.status(409).send({ message: 'Пользователь уже существует' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(500).send({ message: err.message });
       }
     });
 };
