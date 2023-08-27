@@ -101,9 +101,9 @@ module.exports.login = (req, res) => {
   const { email, password } = req.body;
   User.findUserByCredentials({ email, password })
     .then((user) => {
-      const { userId } = user;
+      const { _id } = user;
       const token = sign(
-        { _id: userId },
+        { _id },
         SECRET_KEY,
         { expiresIn: '7d' },
       );
