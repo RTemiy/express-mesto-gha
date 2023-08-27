@@ -99,7 +99,7 @@ module.exports.updateUserAvatar = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-  User.findUserByCredentials({ email, password })
+  User.findUserByCredentials(email, password)
     .then((user) => {
       const { _id } = user;
       const token = sign(
