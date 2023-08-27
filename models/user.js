@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
-}, { typeKey: '$type' });
+});
 
 function findUserByCredentials(email, password) {
   return this.findOne({ email }).select('+password')
