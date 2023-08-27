@@ -22,18 +22,28 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  function deleteCard() {
+    Card.findByIdAndDelete(req.params.cardId)
+      .then((card) => {
+        res.send({ data: card });
+      })
+      .catch((err) => {
+        if (err.name === 'CastError') {
+          res.status(400).send({ message: 'Некорректные данные' });
+        } else {
+          res.status(500).send({ message: 'На сервере произошла ошибка' });
+        }
+      });
+  }
+
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (card) { res.send({ data: card }); } else {
-        res.status(404).send({ message: 'Карточка не найдена' });
+      if (!card) {
+        return res.status(404).send({ message: 'Карточка не найдена' });
+      } if (req.user._id === card.owner) {
+        return deleteCard();
       }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректные данные' });
-      } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
-      }
+      return res.status(403).send({ message: 'Недостаточно прав' });
     });
 };
 
