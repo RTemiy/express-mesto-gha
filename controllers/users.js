@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 const User = require('../models/user');
+const Error409 = require('../errors/Error409');
+const Error400 = require('../errors/Error400');
+const Error500 = require('../errors/Error500');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -26,7 +29,7 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, password, email,
   } = req.body;
@@ -40,11 +43,11 @@ module.exports.createUser = (req, res) => {
         }))
         .catch((err) => {
           if (err.code === 11000) {
-            res.status(409).send({ message: 'Уже существует' });
+            next(new Error409('Уже существует'));
           } else if (err.name === 'ValidationError') {
-            res.status(400).send({ message: 'Некорректные данные' });
+            next(new Error400('Некорректные данные'));
           } else {
-            res.status(500).send({ message: 'На сервере произошла ошибка' });
+            next(new Error500('На сервере произошла ошибка'));
           }
         });
     });

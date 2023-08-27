@@ -10,6 +10,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const authRoute = require('./routes/auth');
 const auth = require('./middlewares/auth');
+const handleError = require('./middlewares/errors');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
@@ -34,5 +35,7 @@ app.all('*', (req, res) => {
 });
 
 app.use(errors());
+
+app.use(handleError);
 
 app.listen(PORT, () => {});
