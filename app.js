@@ -33,8 +33,8 @@ app.all('*', (req, res, next) => {
   next(new Error404('Страница не существует'));
 });
 
-app.use(handleError);
-
 app.use(errors());
+
+app.use(handleError);
 
 app.listen(PORT, () => {});
