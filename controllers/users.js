@@ -7,10 +7,10 @@ const Error500 = require('../errors/Error500');
 const Error404 = require('../errors/Error404');
 const Error401 = require('../errors/Error401');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch(() => next(new Error500('На сервере произошла ошибка')));
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -38,7 +38,7 @@ module.exports.createUser = (req, res, next) => {
       User.create({
         name, about, avatar, password: hash, email,
       })
-        .then((user) => res.send({
+        .then((user) => res.status(201).send({
           name, about, avatar, email, _id: user._id,
         }))
         .catch((err) => {
@@ -117,5 +117,6 @@ module.exports.getMyself = (req, res, next) => {
         return res.send(...user);
       }
       return next(new Error404('Пользователь не найден'));
-    });
+    })
+    .catch(() => next(new Error500('Ошибка на стороне сервера')));
 };
