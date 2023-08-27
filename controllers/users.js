@@ -17,17 +17,15 @@ module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user) {
-        res.send({ data: user });
-      } else {
-        next(new Error404('Пользователь не найден'));
+        return res.send({ data: user });
       }
+      return next(new Error404('Пользователь не найден'));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400('Некорректные данные'));
-      } else {
-        next(new Error500('На сервере произошла ошибка'));
+        return next(new Error400('Некорректные данные'));
       }
+      return next(new Error500('На сервере произошла ошибка'));
     });
 };
 
@@ -45,12 +43,11 @@ module.exports.createUser = (req, res, next) => {
         }))
         .catch((err) => {
           if (err.code === 11000) {
-            next(new Error409('Пользователь уже существует'));
-          } else if (err.name === 'ValidationError') {
-            next(new Error400('Некорректные данные'));
-          } else {
-            next(new Error500('На сервере произошла ошибка'));
+            return next(new Error409('Пользователь уже существует'));
+          } if (err.name === 'ValidationError') {
+            return next(new Error400('Некорректные данные'));
           }
+          return next(new Error500('На сервере произошла ошибка'));
         });
     });
 };
@@ -64,17 +61,15 @@ module.exports.updateUserInfo = (req, res, next) => {
   )
     .then((user) => {
       if (user) {
-        res.send({ data: user });
-      } else {
-        next(new Error404('Пользователь не найден'));
+        return res.send({ data: user });
       }
+      return next(new Error404('Пользователь не найден'));
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400('Некорректные данные'));
-      } else {
-        next(new Error500('На сервере произошла ошибка'));
+        return next(new Error400('Некорректные данные'));
       }
+      return next(new Error500('На сервере произошла ошибка'));
     });
 };
 
@@ -87,17 +82,15 @@ module.exports.updateUserAvatar = (req, res, next) => {
   )
     .then((user) => {
       if (user) {
-        res.send({ data: user });
-      } else {
-        next(new Error404('Пользователь не найден'));
+        return res.send({ data: user });
       }
+      return next(new Error404('Пользователь не найден'));
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400('Некорректные данные'));
-      } else {
-        next(new Error500('Ошибка на стороне сервера'));
+        return next(new Error400('Некорректные данные'));
       }
+      return next(new Error500('Ошибка на стороне сервера'));
     });
 };
 
@@ -113,9 +106,7 @@ module.exports.login = (req, res, next) => {
       res.cookie('jwt', token, { maxAge: 36000, httpOnly: true });
       return res.send({ _id: token });
     })
-    .catch((err) => {
-      next(new Error401(err.message));
-    });
+    .catch((err) => next(new Error401(err.message)));
 };
 
 module.exports.getMyself = (req, res, next) => {

@@ -18,10 +18,9 @@ module.exports.createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400('Некорректные данные'));
-      } else {
-        next(new Error500('На сервере произошла ошибка'));
+        return next(new Error400('Некорректные данные'));
       }
+      return next(new Error500('На сервере произошла ошибка'));
     });
 };
 
@@ -33,10 +32,9 @@ module.exports.deleteCard = (req, res, next) => {
       })
       .catch((err) => {
         if (err.name === 'CastError') {
-          next(new Error400('Некорректные данные'));
-        } else {
-          next(new Error500('На сервере произошла ошибка'));
+          return next(new Error400('Некорректные данные'));
         }
+        return next(new Error500('На сервере произошла ошибка'));
       });
   }
 
@@ -59,17 +57,15 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        res.send({ data: card });
-      } else {
-        next(new Error404('Карточка не найдена'));
+        return res.send({ data: card });
       }
+      return next(new Error404('Карточка не найдена'));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400('Некорректные данные'));
-      } else {
-        next(new Error500('На сервере произошла ошибка'));
+        return next(new Error400('Некорректные данные'));
       }
+      return next(new Error500('На сервере произошла ошибка'));
     });
 };
 
@@ -81,16 +77,14 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        res.send({ data: card });
-      } else {
-        next(new Error404('Карточка не найдена'));
+        return res.send({ data: card });
       }
+      return next(new Error404('Карточка не найдена'));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400('Некорректные данные'));
-      } else {
-        next(new Error500('На сервере произошла ошибка'));
+        return next(new Error400('Некорректные данные'));
       }
+      return next(new Error500('На сервере произошла ошибка'));
     });
 };
