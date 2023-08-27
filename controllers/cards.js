@@ -14,7 +14,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.send({ data: card });
+      res.status(201).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -46,7 +46,8 @@ module.exports.deleteCard = (req, res, next) => {
         return deleteCard();
       }
       return next(new Error403('Недостаточно прав'));
-    });
+    })
+    .catch(() => next(new Error500('На сервере произошла ошибка')));
 };
 
 module.exports.likeCard = (req, res, next) => {
