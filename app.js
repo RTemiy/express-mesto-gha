@@ -10,7 +10,13 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 const bodyParser = require('body-parser');
-const rateLimiter = require('express-rate-limit');
+
+const limiter = require('express-rate-limit')({
+  windowMs: 200,
+  max: 100,
+  message: 'Превышено количество запросов',
+});
+
 const authRoute = require('./routes/auth');
 const auth = require('./middlewares/auth');
 const handleError = require('./middlewares/errors');
@@ -20,7 +26,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.use(rateLimiter);
+app.use(limiter);
 app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json());
