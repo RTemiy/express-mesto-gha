@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const checkEmail = require('validator/lib/isEmail');
 const { compare } = require('bcrypt');
 const { AVATAR_REGEX } = require('../utils/constants');
 
@@ -32,7 +31,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: (email) => { checkEmail(email); },
+      validator: (email) => /.+@.+\..+/.test(email),
       message: 'Необходим валидный Email',
     },
   },
