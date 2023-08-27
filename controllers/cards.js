@@ -4,17 +4,17 @@ const Error500 = require('../errors/Error500');
 const Error404 = require('../errors/Error404');
 const Error403 = require('../errors/Error403');
 
-module.exports.getCards = (req, res, next) => {
+module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }));
-  return next(new Error500('На сервере произошла ошибка'));
+    .then((cards) => res.send({ data: cards }))
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.status(201).send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
