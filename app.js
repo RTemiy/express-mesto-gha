@@ -3,9 +3,11 @@ const { mongoose } = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
+
 require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
+
 const app = express();
 const bodyParser = require('body-parser');
 const authRoute = require('./routes/auth');
