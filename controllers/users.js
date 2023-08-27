@@ -43,7 +43,7 @@ module.exports.createUser = (req, res, next) => {
         }))
         .catch((err) => {
           if (err.code === 11000) {
-            next(new Error409('Уже существует'));
+            next(new Error409('Пользователь уже существует'));
           } else if (err.name === 'ValidationError') {
             next(new Error400('Некорректные данные'));
           } else {
