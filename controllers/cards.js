@@ -4,10 +4,10 @@ const Error500 = require('../errors/Error500');
 const Error404 = require('../errors/Error404');
 const Error403 = require('../errors/Error403');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch(() => next(new Error500('На сервере произошла ошибка')));
 };
 
 module.exports.createCard = (req, res, next) => {
