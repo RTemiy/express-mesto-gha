@@ -13,7 +13,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.use(helmet);
+app.use(helmet());
 
 app.use(cookieParser());
 
