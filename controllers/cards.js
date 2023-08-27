@@ -23,7 +23,7 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   function deleteCard() {
-    Card.findByIdAndDelete(req.params.cardId)
+    Card.findByIdAndRemove(req.params.cardId)
       .then((card) => {
         res.send({ data: card });
       })
@@ -43,7 +43,7 @@ module.exports.deleteCard = (req, res) => {
       } if (req.user._id === card.owner) {
         return deleteCard();
       }
-      return res.status(403).send({ message: 'Недостаточно прав' });
+      return res.status(201).send({ message: 'Недостаточно прав' });
     });
 };
 
