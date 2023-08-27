@@ -4,6 +4,8 @@ const User = require('../models/user');
 const Error409 = require('../errors/Error409');
 const Error400 = require('../errors/Error400');
 const Error500 = require('../errors/Error500');
+const Error404 = require("../errors/Error404");
+const Error401 = require("../errors/Error401");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -53,7 +55,7 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-module.exports.updateUserInfo = (req, res) => {
+module.exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -64,19 +66,19 @@ module.exports.updateUserInfo = (req, res) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        next(new Error404('Пользователь не найден'));
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        next(new Error400('Некорректные данные'));
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        next(new Error500('На сервере произошла ошибка'));
       }
     });
 };
 
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -87,19 +89,19 @@ module.exports.updateUserAvatar = (req, res) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        next(new Error404('Пользователь не найден'));
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        next(new Error400('Некорректные данные'));
       } else {
-        res.status(500).send({ message: err.message });
+        next(new Error500('Ошибка на стороне сервера'));
       }
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
@@ -112,19 +114,17 @@ module.exports.login = (req, res) => {
       return res.send({ _id: token });
     })
     .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
+      next(new Error401(err.message));
     });
 };
 
-module.exports.getMyself = (req, res) => {
+module.exports.getMyself = (req, res, next) => {
   const { _id } = req.user;
   User.find({ _id })
     .then((user) => {
       if (user) {
         return res.send(...user);
       }
-      return res.status(404).send({ message: 'Пользователь не найден' });
+      return next(new Error404('Пользователь не найден'));
     });
 };

@@ -11,15 +11,14 @@ const bodyParser = require('body-parser');
 const authRoute = require('./routes/auth');
 const auth = require('./middlewares/auth');
 const handleError = require('./middlewares/errors');
+const Error404 = require('./errors/Error404');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
 });
 
 app.use(helmet());
-
 app.use(cookieParser());
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -30,8 +29,8 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не существует' });
+app.all('*', (req, res, next) => {
+  next(new Error404('Страница не существует'));
 });
 
 app.use(errors());
