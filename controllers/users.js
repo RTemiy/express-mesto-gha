@@ -38,16 +38,16 @@ module.exports.createUser = (req, res) => {
       })
         .then((user) => res.send({
           name, about, avatar, email, _id: user._id,
-        }));
-    })
-    .catch((err) => {
-      if (err.code === 11000) {
-        res.status(409).send({ message: 'Уже существует' });
-      } else if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
-      } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
-      }
+        }))
+        .catch((err) => {
+          if (err.code === 11000) {
+            res.status(409).send({ message: 'Уже существует' });
+          } else if (err.name === 'ValidationError') {
+            res.status(400).send({ message: 'Некорректные данные' });
+          } else {
+            res.status(500).send({ message: 'На сервере произошла ошибка' });
+          }
+        });
     });
 };
 
