@@ -40,10 +40,10 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: 'Карточка не найдена' });
-      } if (req.user._id === card.owner) {
+      } if (req.user._id === card.owner.toString()) {
         return deleteCard();
       }
-      return res.status(201).send({ message: 'Недостаточно прав' });
+      return res.status(403).send({ message: 'Недостаточно прав' });
     });
 };
 
