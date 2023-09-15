@@ -103,7 +103,9 @@ module.exports.login = (req, res, next) => {
         process.env.SECRET_KEY,
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, { maxAge: 36000, httpOnly: true });
+      res.cookie('jwt', token, {
+        maxAge: 36000, httpOnly: true, sameSite: 'none', secure: true,
+      });
       return res.send({ _id: token });
     })
     .catch((err) => next(new Error401(err.message)));
