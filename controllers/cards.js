@@ -14,7 +14,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.status(201).send({ data: card });
+      res.status(201).send({ card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -28,7 +28,7 @@ module.exports.deleteCard = (req, res, next) => {
   function deleteCard() {
     Card.findByIdAndRemove(req.params.cardId)
       .then((card) => {
-        res.send({ data: card });
+        res.send({ card });
       })
       .catch((err) => {
         if (err.name === 'CastError') {
@@ -58,7 +58,7 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        return res.send({ data: card });
+        return res.send({ card });
       }
       return next(new Error404('Карточка не найдена'));
     })
@@ -78,7 +78,7 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        return res.send({ data: card });
+        return res.send({ card });
       }
       return next(new Error404('Карточка не найдена'));
     })
