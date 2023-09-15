@@ -6,7 +6,7 @@ const Error403 = require('../errors/Error403');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send({ cards }))
     .catch(() => next(new Error500('На сервере произошла ошибка')));
 };
 
