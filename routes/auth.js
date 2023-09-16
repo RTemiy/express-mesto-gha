@@ -3,7 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 
 const { createUser } = require('../controllers/users');
 const { login } = require('../controllers/users');
-const { AVATAR_REGEX } = require('../utils/constants');
+const { URL_REGEXP } = require('../utils/constants');
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -12,7 +12,7 @@ router.post('/signup', celebrate({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi
-      .string().pattern(AVATAR_REGEX),
+      .string().pattern(URL_REGEXP),
   }),
 }), createUser);
 

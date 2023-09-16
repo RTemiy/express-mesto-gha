@@ -1,13 +1,12 @@
 const Card = require('../models/card');
 const Error400 = require('../errors/Error400');
-const Error500 = require('../errors/Error500');
 const Error404 = require('../errors/Error404');
 const Error403 = require('../errors/Error403');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ cards }))
-    .catch(() => next(new Error500('На сервере произошла ошибка')));
+    .catch((err) => next(err));
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -20,7 +19,7 @@ module.exports.createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new Error400('Некорректные данные'));
       }
-      return next(new Error500('На сервере произошла ошибка'));
+      return next(err);
     });
 };
 
@@ -34,7 +33,7 @@ module.exports.deleteCard = (req, res, next) => {
         if (err.name === 'CastError') {
           return next(new Error400('Некорректные данные'));
         }
-        return next(new Error500('На сервере произошла ошибка'));
+        return next(err);
       });
   }
 
@@ -47,7 +46,7 @@ module.exports.deleteCard = (req, res, next) => {
       }
       return next(new Error403('Недостаточно прав'));
     })
-    .catch(() => next(new Error500('На сервере произошла ошибка')));
+    .catch((err) => next(err));
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -66,7 +65,7 @@ module.exports.likeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         return next(new Error400('Некорректные данные'));
       }
-      return next(new Error500('На сервере произошла ошибка'));
+      return next(err);
     });
 };
 
@@ -86,6 +85,6 @@ module.exports.dislikeCard = (req, res, next) => {
       if (err.name === 'CastError') {
         return next(new Error400('Некорректные данные'));
       }
-      return next(new Error500('На сервере произошла ошибка'));
+      return next(err);
     });
 };

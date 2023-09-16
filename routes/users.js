@@ -3,7 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getUsers, getUserById, updateUserInfo, updateUserAvatar, getMyself,
 } = require('../controllers/users');
-const { AVATAR_REGEX } = require('../utils/constants');
+const { URL_REGEXP } = require('../utils/constants');
 
 router.get('/', getUsers);
 
@@ -17,16 +17,16 @@ router.get('/:id', celebrate({
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
 }), updateUserInfo);
 
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi
-      .string()
-      .pattern(AVATAR_REGEX),
+      .string().required()
+      .pattern(URL_REGEXP).required(),
   }),
 }), updateUserAvatar);
 

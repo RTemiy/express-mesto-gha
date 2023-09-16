@@ -3,7 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 const {
   createCard, getCards, deleteCard, likeCard, dislikeCard,
 } = require('../controllers/cards');
-const { AVATAR_REGEX } = require('../utils/constants');
+const { URL_REGEXP } = require('../utils/constants');
 
 router.get('/', getCards);
 
@@ -12,7 +12,7 @@ router.post('/', celebrate({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string()
       .required()
-      .pattern(AVATAR_REGEX),
+      .pattern(URL_REGEXP),
   }),
 }), createCard);
 

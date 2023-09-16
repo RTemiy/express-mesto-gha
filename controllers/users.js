@@ -3,14 +3,12 @@ const { sign } = require('jsonwebtoken');
 const User = require('../models/user');
 const Error409 = require('../errors/Error409');
 const Error400 = require('../errors/Error400');
-const Error500 = require('../errors/Error500');
 const Error404 = require('../errors/Error404');
-const Error401 = require('../errors/Error401');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => next(new Error500('На сервере произошла ошибка')));
+    .catch((err) => next(err));
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -25,7 +23,7 @@ module.exports.getUserById = (req, res, next) => {
       if (err.name === 'CastError') {
         return next(new Error400('Некорректные данные'));
       }
-      return next(new Error500('На сервере произошла ошибка'));
+      return next(err);
     });
 };
 
@@ -47,7 +45,7 @@ module.exports.createUser = (req, res, next) => {
           } if (err.name === 'ValidationError') {
             return next(new Error400('Некорректные данные'));
           }
-          return next(new Error500('На сервере произошла ошибка'));
+          return next(err);
         });
     });
 };
@@ -69,7 +67,7 @@ module.exports.updateUserInfo = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new Error400('Некорректные данные'));
       }
-      return next(new Error500('На сервере произошла ошибка'));
+      return next(err);
     });
 };
 
@@ -90,7 +88,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new Error400('Некорректные данные'));
       }
-      return next(new Error500('Ошибка на стороне сервера'));
+      return next(err);
     });
 };
 
@@ -103,12 +101,9 @@ module.exports.login = (req, res, next) => {
         process.env.SECRET_KEY,
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, {
-        maxAge: 36000, httpOnly: true, sameSite: 'none', secure: true,
-      });
       return res.send({ _id: token });
     })
-    .catch((err) => next(new Error401(err.message)));
+    .catch((err) => next(err));
 };
 
 module.exports.getMyself = (req, res, next) => {
@@ -120,5 +115,5 @@ module.exports.getMyself = (req, res, next) => {
       }
       return next(new Error404('Пользователь не найден'));
     })
-    .catch(() => next(new Error500('Ошибка на стороне сервера')));
+    .catch((err) => next(err));
 };

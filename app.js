@@ -9,7 +9,6 @@ require('dotenv').config();
 const { PORT = 3000 } = process.env;
 
 const app = express();
-const bodyParser = require('body-parser');
 
 const limiter = require('express-rate-limit')({
   windowMs: 200,
@@ -34,8 +33,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 app.use(limiter);
 app.use(helmet());
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(corsChecker);
 
