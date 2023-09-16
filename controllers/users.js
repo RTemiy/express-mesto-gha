@@ -102,7 +102,7 @@ module.exports.login = (req, res, next) => {
         process.env.SECRET_KEY,
         { expiresIn: '7d' },
       );
-      return res.send({ _id: token });
+      return res.send({ token });
     })
     .catch((err) => next(err));
 };
