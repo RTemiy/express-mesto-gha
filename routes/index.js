@@ -13,10 +13,9 @@ const authRoute = require('./auth');
 const auth = require('../middlewares/auth');
 const Error404 = require('../errors/Error404');
 const handleError = require('../middlewares/errors');
-const { use } = require('./auth');
 const router = require('./auth');
 
-use(requestLogger);
+router.use(requestLogger);
 
 router.use(limiter);
 router.use(helmet());
