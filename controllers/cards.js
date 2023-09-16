@@ -1,3 +1,4 @@
+const { Mongoose } = require('mongoose');
 const Card = require('../models/card');
 const Error400 = require('../errors/Error400');
 const Error404 = require('../errors/Error404');
@@ -16,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
       res.status(201).send({ card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof Mongoose.Error.ValidationError) {
         return next(new Error400('Некорректные данные'));
       }
       return next(err);
@@ -30,7 +31,7 @@ module.exports.deleteCard = (req, res, next) => {
         res.send({ card });
       })
       .catch((err) => {
-        if (err.name === 'CastError') {
+        if (err instanceof Mongoose.Error.CastError) {
           return next(new Error400('Некорректные данные'));
         }
         return next(err);
@@ -62,7 +63,7 @@ module.exports.likeCard = (req, res, next) => {
       return next(new Error404('Карточка не найдена'));
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof Mongoose.Error.CastError) {
         return next(new Error400('Некорректные данные'));
       }
       return next(err);
@@ -82,7 +83,7 @@ module.exports.dislikeCard = (req, res, next) => {
       return next(new Error404('Карточка не найдена'));
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof Mongoose.Error.CastError) {
         return next(new Error400('Некорректные данные'));
       }
       return next(err);

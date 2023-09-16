@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { sign } = require('jsonwebtoken');
+const { Mongoose } = require('mongoose');
 const User = require('../models/user');
 const Error409 = require('../errors/Error409');
 const Error400 = require('../errors/Error400');
@@ -20,7 +21,7 @@ module.exports.getUserById = (req, res, next) => {
       return next(new Error404('Пользователь не найден'));
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof Mongoose.Error.CastError) {
         return next(new Error400('Некорректные данные'));
       }
       return next(err);
@@ -42,7 +43,7 @@ module.exports.createUser = (req, res, next) => {
         .catch((err) => {
           if (err.code === 11000) {
             return next(new Error409('Пользователь уже существует'));
-          } if (err.name === 'ValidationError') {
+          } if (err instanceof Mongoose.Error.ValidationError) {
             return next(new Error400('Некорректные данные'));
           }
           return next(err);
@@ -64,7 +65,7 @@ module.exports.updateUserInfo = (req, res, next) => {
       return next(new Error404('Пользователь не найден'));
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof Mongoose.Error.ValidationError) {
         return next(new Error400('Некорректные данные'));
       }
       return next(err);
@@ -85,7 +86,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       return next(new Error404('Пользователь не найден'));
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof Mongoose.Error.ValidationError) {
         return next(new Error400('Некорректные данные'));
       }
       return next(err);
